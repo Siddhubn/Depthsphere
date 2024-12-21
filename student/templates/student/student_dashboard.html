@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+    <h1>Student Dashboard</h1>
+    <h2>Available Quizzes</h2>
+    {% for quiz in quizzes %}
+    <p>Quiz: {{ quiz.title }} | Subject: {{ quiz.subject.name }}</p>
+    <form method="POST" action="/student/dashboard/">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="attempt_quiz">
+        <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
+        <label for="answers">Your Answers:</label>
+        <input type="text" id="answers" name="answers" required><br>
+        <button type="submit">Attempt Quiz</button>
+    </form>
+    {% endfor %}
+
+    <h2>Your Attempts</h2>
+    {% for attempt in attempts %}
+    <p>Quiz: {{ attempt.quiz.title }} | Score: {{ attempt.score }}</p>
+    {% endfor %}
+
+    <a href="/users/login">Logout</a>
+</body>
+</html>

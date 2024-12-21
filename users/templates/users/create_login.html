@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create User</title>
+</head>
+<body>
+    <h1>Create User</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" action="/users/create_login/">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="role">Role:</label>
+        <select id="role" name="role" required>
+            <option value="HOD">HOD</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Student">Student</option>
+        </select><br>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <a href="{% url 'login' %}">Login</a>
+</body>
+</html>

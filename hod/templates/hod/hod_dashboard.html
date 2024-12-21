@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ request.user.username }}</h1>
+
+    <!-- Display previously created classes -->
+    <h2>Classes</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Section</th>
+        </tr>
+        {% for cls in classes %}
+        <tr>
+            <td>{{ cls.name }}</td>
+            <td>{{ cls.semester }}</td>
+            <td>{{ cls.section }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Create a new class -->
+    <h3>Create Class</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_class">
+        <label>Name:</label><input type="text" name="name" required><br>
+        <label>Semester:</label><input type="text" name="semester" required><br>
+        <label>Section:</label><input type="text" name="section" required><br>
+        <button type="submit">Create Class</button>
+    </form>
+
+    <!-- Display previously created subjects -->
+    <h2>Subjects</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Class</th>
+        </tr>
+        {% for subject in subjects %}
+        <tr>
+            <td>{{ subject.name }}</td>
+            <td>{{ subject.assigned_class}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Create a new subject -->
+    <h3>Create Subject</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_subject">
+        <label>Name:</label><input type="text" name="name" required><br>
+        <label>Class:</label>
+        <select name="assigned_class" required>
+            {% for cls in classes %}
+            <option value="{{ cls.id }}">{{ cls.semester }} {{ cls.section }} - {{ cls.name }}</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">Create Subject</button>
+    </form>
+
+    <!-- Display teacher assignments -->
+    <h2>Teacher Assignments</h2>
+    <table border="1">
+        <tr>
+            <th>Teacher</th>
+            <th>Subject</th>
+            <th>Class</th>
+        </tr>
+        {% for assignment in assignments %}
+        <tr>
+            <td>{{ assignment.teacher.username }}</td>
+            <td>{{ assignment.subject.name }}</td>
+            <td>{{ assignment.assigned_class.semester }} {{ assignment.assigned_class.section }} - {{ assignment.assigned_class.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Assign a teacher -->
+    <h3>Assign Teacher</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="assign_teacher">
+        <label>Teacher:</label>
+        <select name="teacher" required>
+            {% for teacher in teachers %}
+            <option value="{{ teacher.id }}">{{ teacher.username }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label>Subject:</label>
+        <select name="subject" required>
+            {% for subject in subjects %}
+            <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select><br>
+        <label>Class:</label>
+        <select name="assigned_class" required>
+            {% for cls in classes %}
+            <option value="{{ cls.id }}">{{ cls.semester }} {{ cls.section }} - {{ cls.name }}</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">Assign Teacher</button>
+    </form>
+
+    <a href="/users/login">Logout</a>
+</body>
+</html>
